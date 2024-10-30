@@ -6,13 +6,30 @@
     <title>SPY Alerts</title>
     <style>
         body {
-            background-image: url('background.jpg'); /* Add your background image here */
+            background-image: url('whitebg.jpg'); /* Add your background image here */
             background-size: cover;
-            color: #ffffff;
+            color: #333;
             font-family: Arial, sans-serif;
-            text-align: center;
             margin: 0;
             padding: 20px;
+            display: flex; /* Using flex to create a sidebar layout */
+        }
+
+        #rules {
+            width: 25%; /* Width for the rules section */
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            border-radius: 10px;
+            margin-right: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #alerts {
+            flex: 1; /* Fill the remaining space */
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
         h1 {
@@ -20,12 +37,8 @@
             margin-bottom: 20px;
         }
 
-        #alerts {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 0 auto;
-            width: 80%;
+        h2 {
+            margin-top: 0;
         }
 
         .alert {
@@ -35,12 +48,38 @@
             padding: 15px;
             font-size: 1.2em;
         }
+
+        ol {
+            padding-left: 20px; /* Indent the list */
+        }
+
+        li {
+            margin: 10px 0; /* Space between list items */
+        }
     </style>
 </head>
 <body>
 
-    <h1>SPY Alerts System</h1>
-    <div id="alerts"></div>
+    <div id="rules">
+        <h2>Day Trading Rules</h2>
+        <ol>
+            <li>1. Set clear goals for each trade.</li>
+            <li>2. Stick to your trading plan.</li>
+            <li>3. Keep emotions in check; trade with logic.</li>
+            <li>4. Take profits early; don’t get greedy.</li>
+            <li>5. Cut losses quickly; don’t hold onto losing trades.</li>
+            <li>6. Use stop losses to manage risk.</li>
+            <li>7. Stay informed about market news.</li>
+            <li>8. Focus on slow and steady growth.</li>
+            <li>9. Analyze your trades; learn from mistakes.</li>
+            <li>10. Be patient; wait for the right opportunities.</li>
+        </ol>
+    </div>
+
+    <div id="alerts">
+        <h1>SPY Alerts System</h1>
+        <div id="alertMessages"></div>
+    </div>
 
     <script>
         const apiKey = "UZFB4jqfuaDsDFKfwN4PCokemAXBwqLM"; // Your Polygon.io API key
@@ -89,7 +128,7 @@
 
         // Process and display options data
         const processOptionsData = (data, symbol) => {
-            const alertsDiv = document.getElementById("alerts");
+            const alertsDiv = document.getElementById("alertMessages");
 
             // Create a header for the symbol
             const symbolHeader = document.createElement("h2");
@@ -121,7 +160,7 @@
 
         // Fetch data for SPY every minute
         setInterval(() => {
-            document.getElementById("alerts").innerHTML = ""; // Clear previous alerts
+            document.getElementById("alertMessages").innerHTML = ""; // Clear previous alerts
             fetchOptionsData("SPY"); // Only fetching SPY
         }, 60000);
 
