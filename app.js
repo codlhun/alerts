@@ -1,8 +1,6 @@
-// app.js
-
 const apiKey = "UZFB4jqfuaDsDFKfwN4PCokemAXBwqLM"; // Your Polygon.io API key
 
-// Function to fetch options data
+// Function to fetch options data for SPY
 const fetchOptionsData = async (symbol) => {
     try {
         const response = await fetch(`https://api.polygon.io/v3/snapshot/options/${symbol}?apiKey=${apiKey}`);
@@ -21,6 +19,9 @@ const fetchOptionsData = async (symbol) => {
 // Process and display options data
 const processOptionsData = (data, symbol) => {
     const alertsDiv = document.getElementById("alerts");
+
+    // Clear previous alerts
+    alertsDiv.innerHTML = ""; // Clear previous alerts
 
     // Create a header for the symbol
     const symbolHeader = document.createElement("h2");
@@ -42,13 +43,10 @@ const isHighProbability = (option) => {
     return option.greeks?.delta > 0.5 && option.open_interest > 100; // Adjust criteria as needed
 };
 
-// Fetch data for SPY and QQQ every minute
+// Fetch data for SPY every minute
 setInterval(() => {
-    document.getElementById("alerts").innerHTML = ""; // Clear previous alerts
     fetchOptionsData("SPY");
-    fetchOptionsData("QQQ");
 }, 60000);
 
-// Initial data fetch
+// Initial data fetch for SPY
 fetchOptionsData("SPY");
-fetchOptionsData("QQQ");
