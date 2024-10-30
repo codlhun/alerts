@@ -1,65 +1,54 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>0DTE SPY Alerts</title>
+    <title>SPY Alerts</title>
     <style>
         body {
+            background-image: url('background.jpg'); /* Add your background image here */
+            background-size: cover;
+            color: #ffffff;
             font-family: Arial, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
+            text-align: center;
             margin: 0;
             padding: 20px;
         }
+
         h1 {
-            text-align: center;
-            color: #4CAF50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
         }
+
         #alerts {
-            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
+            margin: 0 auto;
+            width: 80%;
         }
+
         .alert {
-            border: 1px solid #4CAF50;
-            padding: 10px;
-            margin-bottom: 10px;
+            background: rgba(255, 0, 0, 0.8);
             border-radius: 5px;
-            background-color: #e7f3fe;
-        }
-        .risk-update {
-            background-color: #ffeb3b;
-            border-color: #fbc02d;
-        }
-        .button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #45a049;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 1.2em;
         }
     </style>
 </head>
 <body>
-    <h1>0DTE SPY Alerts</h1>
+
+    <h1>SPY Alerts System</h1>
     <div id="alerts"></div>
+
     <script>
         const apiKey = "UZFB4jqfuaDsDFKfwN4PCokemAXBwqLM"; // Your Polygon.io API key
-        const targetPrices = [579, 580]; // Example target prices
-        const stopLossPrice = 577; // Example stop loss price
-        let currentPrice = 578; // Simulated current price for testing purposes
-        let updateInterval;
 
+        // Function to fetch options data
         const fetchOptionsData = async (symbol) => {
+            // Uncomment the following lines to fetch data from the API
+            /*
             try {
                 const response = await fetch(`https://api.polygon.io/v3/snapshot/options/${symbol}?apiKey=${apiKey}`);
                 const data = await response.json();
@@ -72,49 +61,69 @@
             } catch (error) {
                 console.error(`Error fetching data for ${symbol}:`, error);
             }
+            */
+            
+            // Call the mock function for testing
+            processMockData(symbol);
         };
 
+        // Mock function to simulate options data
+        const processMockData = (symbol) => {
+            // Simulated data structure based on expected API response
+            const mockData = [
+                {
+                    "ticker": symbol,
+                    "date": "11/01",
+                    "strike": "579p",
+                    "premium": 0.66,
+                    "price_targets": [580, 585, 590],
+                    "stop_loss": 575,
+                    "greeks": { "delta": 0.6 },
+                    "open_interest": 150
+                }
+            ];
+
+            // Process the mock data as if it were real
+            processOptionsData(mockData, symbol);
+        };
+
+        // Process and display options data
         const processOptionsData = (data, symbol) => {
             const alertsDiv = document.getElementById("alerts");
-            alertsDiv.innerHTML = ''; // Clear previous alerts
+
+            // Create a header for the symbol
+            const symbolHeader = document.createElement("h2");
+            symbolHeader.textContent = `Alerts for ${symbol}`;
+            alertsDiv.appendChild(symbolHeader);
 
             data.forEach(option => {
                 if (isHighProbability(option)) {
                     const alert = document.createElement("div");
                     alert.className = "alert";
-                    alert.textContent = `${symbol} - Date: 11/1 | Strike: 579p | Premium Price @ 0.66`;
+                    alert.innerHTML = `
+                        <strong>Ticker:</strong> ${option.ticker} <br>
+                        <strong>Date:</strong> ${option.date} <br>
+                        <strong>Strike:</strong> ${option.strike} <br>
+                        <strong>Premium Price:</strong> $${option.premium} <br>
+                        <strong>Price Targets:</strong> ${option.price_targets.join(', ')} <br>
+                        <strong>Stop Loss:</strong> ${option.stop_loss} <br>
+                        <strong>Explanation:</strong> This alert is triggered due to high probability based on the option's delta and open interest. <br>
+                    `;
                     alertsDiv.appendChild(alert);
-                    startPriceMonitoring(alert, targetPrices, stopLossPrice);
                 }
             });
         };
 
+        // Define high-probability criteria
         const isHighProbability = (option) => {
             return option.greeks?.delta > 0.5 && option.open_interest > 100; // Adjust criteria as needed
         };
 
-        const startPriceMonitoring = (alertElement, targets, stopLoss) => {
-            clearInterval(updateInterval);
-            updateInterval = setInterval(() => {
-                checkTargetsAndStopLoss(alertElement, targets, stopLoss);
-            }, 300000); // Check every 5 minutes
-        };
-
-        const checkTargetsAndStopLoss = (alertElement, targets, stopLoss) => {
-            if (currentPrice >= targets[0]) {
-                alertElement.textContent += ` | Target 1 hit! Price: ${targets[0]}`;
-                clearInterval(updateInterval);
-            } else if (currentPrice >= targets[1]) {
-                alertElement.textContent += ` | Target 2 hit! Price: ${targets[1]}`;
-                clearInterval(updateInterval);
-            } else if (currentPrice <= stopLoss) {
-                alertElement.textContent += ` | Stop Loss hit! Price: ${stopLoss}`;
-                clearInterval(updateInterval);
-            } else {
-                alertElement.className = "alert risk-update";
-                alertElement.textContent += ` | No movement. Manage risk! Exit the trade if needed.`;
-            }
-        };
+        // Fetch data for SPY every minute
+        setInterval(() => {
+            document.getElementById("alerts").innerHTML = ""; // Clear previous alerts
+            fetchOptionsData("SPY"); // Only fetching SPY
+        }, 60000);
 
         // Initial data fetch
         fetchOptionsData("SPY");
