@@ -3,42 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPY Alerts</title>
+    <title>The Spy Who Traded Me</title> <!-- Updated title -->
     <style>
         body {
-            background-image: url('whitebg.jpg'); /* Add your background image here */
+            background-image: url('whitebg.jpg'); /* Background image */
             background-size: cover;
-            color: #333;
-            font-family: Arial, sans-serif;
+            color: #fff; /* White text for better contrast */
+            font-family: 'Arial', sans-serif; /* Font style */
             margin: 0;
             padding: 20px;
             display: flex; /* Using flex to create a sidebar layout */
+            align-items: flex-start; /* Align items at the top */
         }
 
         #rules {
             width: 25%; /* Width for the rules section */
             padding: 20px;
-            background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            background: rgba(30, 30, 30, 0.8); /* Dark background for rules */
             border-radius: 10px;
             margin-right: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            font-size: 1.5em; /* Increased font size */
+        }
+
+        #lifeRules {
+            width: 25%; /* Width for the life rules section */
+            padding: 20px;
+            background: rgba(30, 30, 30, 0.8); /* Dark background for rules */
+            border-radius: 10px;
+            margin-left: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            font-size: 1.5em; /* Increased font size */
         }
 
         #alerts {
             flex: 1; /* Fill the remaining space */
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.9); /* Darker background for alerts */
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            text-align: center; /* Center text in alerts */
+            font-size: 1.5em; /* Increased font size */
         }
 
         h1 {
-            font-size: 2.5em;
+            font-size: 3em; /* Larger title font */
             margin-bottom: 20px;
         }
 
         h2 {
             margin-top: 0;
+            font-size: 2em; /* Larger sub-title font */
         }
 
         .alert {
@@ -46,126 +61,46 @@
             border-radius: 5px;
             margin: 10px 0;
             padding: 15px;
-            font-size: 1.2em;
-        }
-
-        ol {
-            padding-left: 20px; /* Indent the list */
-        }
-
-        li {
-            margin: 10px 0; /* Space between list items */
+            font-size: 1.2em; /* Increased alert font size */
         }
     </style>
 </head>
 <body>
-
     <div id="rules">
         <h2>Day Trading Rules</h2>
-        <ol>
-            <li>1. Set clear goals for each trade.</li>
-            <li>2. Stick to your trading plan.</li>
-            <li>3. Keep emotions in check; trade with logic.</li>
-            <li>4. Take profits early; don’t get greedy.</li>
-            <li>5. Cut losses quickly; don’t hold onto losing trades.</li>
-            <li>6. Use stop losses to manage risk.</li>
-            <li>7. Stay informed about market news.</li>
-            <li>8. Focus on slow and steady growth.</li>
-            <li>9. Analyze your trades; learn from mistakes.</li>
-            <li>10. Be patient; wait for the right opportunities.</li>
-        </ol>
+        <p>Focus on slow, steady growth.</p>
+        <p>Take profits early.</p>
+        <p>Manage losses perfectly.</p>
+        <p>Stick to your trading plan.</p>
+        <p>Keep emotions in check.</p>
+        <p>Learn from your mistakes.</p>
+        <p>Stay informed about the market.</p>
+        <p>Use stop-loss orders.</p>
+        <p>Be patient and disciplined.</p>
+        <p>Always analyze your trades.</p>
     </div>
-
     <div id="alerts">
-        <h1>SPY Alerts System</h1>
-        <div id="alertMessages"></div>
+        <h1>The Spy Who Traded Me</h1>
+        <div class="alert">
+            <h2>Alert for SPY</h2>
+            <p>Ticker: SPY | Date: 11/1 | Strike: 579p | Premium Price @ 0.66</p>
+            <p>This trade is set up because SPY is showing strong bullish signals with increasing open interest and favorable delta.</p>
+            <p>Price Targets: 1) $580, 2) $585, 3) $590</p>
+            <p>Stop Loss: $570</p>
+        </div>
     </div>
-
-    <script>
-        const apiKey = "UZFB4jqfuaDsDFKfwN4PCokemAXBwqLM"; // Your Polygon.io API key
-
-        // Function to fetch options data
-        const fetchOptionsData = async (symbol) => {
-            // Uncomment the following lines to fetch data from the API
-            /*
-            try {
-                const response = await fetch(`https://api.polygon.io/v3/snapshot/options/${symbol}?apiKey=${apiKey}`);
-                const data = await response.json();
-
-                if (data.results) {
-                    processOptionsData(data.results, symbol);
-                } else {
-                    console.log(`No options data found for ${symbol}`);
-                }
-            } catch (error) {
-                console.error(`Error fetching data for ${symbol}:`, error);
-            }
-            */
-            
-            // Call the mock function for testing
-            processMockData(symbol);
-        };
-
-        // Mock function to simulate options data
-        const processMockData = (symbol) => {
-            // Simulated data structure based on expected API response
-            const mockData = [
-                {
-                    "ticker": symbol,
-                    "date": "11/01",
-                    "strike": "579p",
-                    "premium": 0.66,
-                    "price_targets": [580, 585, 590],
-                    "stop_loss": 575,
-                    "greeks": { "delta": 0.6 },
-                    "open_interest": 150
-                }
-            ];
-
-            // Process the mock data as if it were real
-            processOptionsData(mockData, symbol);
-        };
-
-        // Process and display options data
-        const processOptionsData = (data, symbol) => {
-            const alertsDiv = document.getElementById("alertMessages");
-
-            // Create a header for the symbol
-            const symbolHeader = document.createElement("h2");
-            symbolHeader.textContent = `Alerts for ${symbol}`;
-            alertsDiv.appendChild(symbolHeader);
-
-            data.forEach(option => {
-                if (isHighProbability(option)) {
-                    const alert = document.createElement("div");
-                    alert.className = "alert";
-                    alert.innerHTML = `
-                        <strong>Ticker:</strong> ${option.ticker} <br>
-                        <strong>Date:</strong> ${option.date} <br>
-                        <strong>Strike:</strong> ${option.strike} <br>
-                        <strong>Premium Price:</strong> $${option.premium} <br>
-                        <strong>Price Targets:</strong> ${option.price_targets.join(', ')} <br>
-                        <strong>Stop Loss:</strong> ${option.stop_loss} <br>
-                        <strong>Explanation:</strong> This alert is triggered due to high probability based on the option's delta and open interest. <br>
-                    `;
-                    alertsDiv.appendChild(alert);
-                }
-            });
-        };
-
-        // Define high-probability criteria
-        const isHighProbability = (option) => {
-            return option.greeks?.delta > 0.5 && option.open_interest > 100; // Adjust criteria as needed
-        };
-
-        // Fetch data for SPY every minute
-        setInterval(() => {
-            document.getElementById("alertMessages").innerHTML = ""; // Clear previous alerts
-            fetchOptionsData("SPY"); // Only fetching SPY
-        }, 60000);
-
-        // Initial data fetch
-        fetchOptionsData("SPY");
-    </script>
+    <div id="lifeRules">
+        <h2>Daily Life Rules</h2>
+        <p>Start your day with gratitude.</p>
+        <p>Stay hydrated and eat healthy.</p>
+        <p>Exercise regularly.</p>
+        <p>Limit distractions and focus.</p>
+        <p>Set clear goals.</p>
+        <p>Take breaks and recharge.</p>
+        <p>Practice mindfulness.</p>
+        <p>Surround yourself with positivity.</p>
+        <p>Read and learn daily.</p>
+        <p>Reflect on your progress.</p>
+    </div>
 </body>
 </html>
