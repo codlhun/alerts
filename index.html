@@ -3,197 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Spy Who Traded Me</title> <!-- Updated title -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> <!-- New Google Font -->
+    <title>NQ Futures Alert System</title>
     <style>
         body {
-            background-image: url('whitebg.jpg'); /* Background image */
-            background-size: cover;
-            color: #333; /* Dark text color for better readability */
-            font-family: 'Montserrat', sans-serif; /* New font style */
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
-            display: flex; /* Using flex to create a sidebar layout */
-            align-items: flex-start; /* Align items at the top */
-            height: 100vh; /* Full height for the body */
-            border: 5px solid #000; /* Black border for a framed look */
         }
-
-        #rules, #lifeRules {
-            width: 25%; /* Width for the rules section */
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.8); /* Dark background for rules */
-            border-radius: 15px;
-            margin: 0 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            font-size: 1.2em; /* Increased font size */
-            color: #e5e5e5; /* Light gray text for better readability */
-        }
-
-        #alerts {
-            flex: 1; /* Fill the remaining space */
-            background: rgba(0, 0, 0, 0.7); /* Darker background for alerts */
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            text-align: center; /* Center text in alerts */
-            font-size: 1.5em; /* Increased font size for the alerts section */
-            color: #ffcc00; /* Gold text for contrast */
-        }
-
         h1 {
-            font-size: 2.5em; /* Larger title font */
-            margin-bottom: 20px;
-            color: #ffcc00; /* Gold color for title */
+            text-align: center;
+            color: #333;
         }
-
-        h2 {
-            margin-top: 0;
-            font-size: 1.8em; /* Larger sub-title font */
-            color: #ffcc00; /* Gold color for headings */
-        }
-
         .alert {
-            background: rgba(255, 204, 0, 0.8); /* Semi-transparent gold background for alerts */
-            border-radius: 5px;
+            background: #ffefef;
+            border-left: 4px solid #ff4d4d;
             margin: 10px 0;
-            padding: 15px;
-            font-size: 1.4em; /* Increased alert font size for better visibility */
-            transition: transform 0.2s; /* Smooth hover effect */
-            position: relative; /* For the before pseudo-element */
+            padding: 10px;
+            font-size: 16px;
         }
-
-        /* Add an animation effect for alerts */
-        .alert::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, #ffcc00, #ffe066);
-            top: 0;
-            border-radius: 5px 5px 0 0; /* Rounded top corners */
+        .button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            max-width: 200px;
+            text-align: center;
         }
-
-        /* Style adjustments for all rules */
-        p {
-            line-height: 1.5; /* Improved line spacing for readability */
+        .button:hover {
+            background: #0056b3;
         }
-
-        .alert p {
-            color: #000; /* Black text for alert details for better contrast */
+        #alerts {
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div id="rules">
-        <h2>Day Trading Rules</h2>
-        <p>Focus on slow, steady growth.</p>
-        <p>Take profits early.</p>
-        <p>Manage losses perfectly.</p>
-        <p>Stick to your trading plan.</p>
-        <p>Keep emotions in check.</p>
-        <p>Learn from your mistakes.</p>
-        <p>Stay informed about the market.</p>
-        <p>Use stop-loss orders.</p>
-        <p>Be patient and disciplined.</p>
-        <p>Always analyze your trades.</p>
-    </div>
-    <div id="alerts">
-        <h1>The SPY Who Traded Me</h1>
-        <div id="alertContainer"></div> <!-- Container for dynamic alerts -->
-    </div>
-    <div id="lifeRules">
-        <h2>Daily Life Rules</h2>
-        <p>Start your day with gratitude.</p>
-        <p>Stay hydrated and eat healthy.</p>
-        <p>Exercise regularly.</p>
-        <p>Limit distractions and focus.</p>
-        <p>Set clear goals.</p>
-        <p>Take breaks and recharge.</p>
-        <p>Practice mindfulness.</p>
-        <p>Surround yourself with positivity.</p>
-        <p>Read and learn daily.</p>
-        <p>Reflect on your progress.</p>
-    </div>
+    <h1>NQ Futures Alert System</h1>
+    <div class="button" onclick="fetchNQData()">Get Alerts</div>
+    <div id="alerts"></div>
 
     <script>
-        const apiKey = "OStxDhMbJ4URE9CEd7jXOoxynL2V"; // Your Tradier API key
+        const API_KEY = "RMaAtVnK2Ysz-gzbG47x";
+        const NQ_URL = `https://data.nasdaq.com/api/v3/datasets/CME/NQ1.json?api_key=${API_KEY}`;
 
-        const fetchOptionsData = async (symbol) => {
+        async function fetchNQData() {
             try {
-                const response = await fetch(`https://api.tradier.com/v1/markets/options/expirations?symbol=${symbol}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Accept': 'application/json'
-                    }
-                });
+                // Fetch data from the Quandl API
+                const response = await fetch(NQ_URL);
                 const data = await response.json();
 
-                if (data.expirations) {
-                    const expiration = data.expirations[0]; // Get the first available expiration date
-                    fetchOptionChain(symbol, expiration);
-                } else {
-                    console.log(`No options expiration data found for ${symbol}`);
-                }
-            } catch (error) {
-                console.error(`Error fetching data for ${symbol}:`, error);
-            }
-        };
+                const dataset = data.dataset.data;
+                const columnNames = data.dataset.column_names;
+                const closeIndex = columnNames.indexOf("Close");
 
-        const fetchOptionChain = async (symbol, expiration) => {
-            try {
-                const response = await fetch(`https://api.tradier.com/v1/markets/options/chains?symbol=${symbol}&expiration=${expiration}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Accept': 'application/json'
-                    }
+                // Extract the close prices and calculate indicators
+                const closePrices = dataset.map(row => row[closeIndex]).reverse();
+
+                const rsi = calculateRSI(closePrices);
+                const alerts = generateAlerts(closePrices, rsi);
+
+                displayAlerts(alerts);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                alert("Failed to fetch data. Check the console for details.");
+            }
+        }
+
+        function calculateRSI(closePrices, period = 14) {
+            const gains = [];
+            const losses = [];
+
+            for (let i = 1; i < closePrices.length; i++) {
+                const difference = closePrices[i] - closePrices[i - 1];
+                if (difference > 0) {
+                    gains.push(difference);
+                    losses.push(0);
+                } else {
+                    gains.push(0);
+                    losses.push(-difference);
+                }
+            }
+
+            const avgGain = arrayAvg(gains.slice(0, period));
+            const avgLoss = arrayAvg(losses.slice(0, period));
+            const rsi = [];
+
+            let prevAvgGain = avgGain;
+            let prevAvgLoss = avgLoss;
+
+            for (let i = period; i < closePrices.length; i++) {
+                const difference = closePrices[i] - closePrices[i - 1];
+                const gain = difference > 0 ? difference : 0;
+                const loss = difference < 0 ? -difference : 0;
+
+                const currentAvgGain = (prevAvgGain * (period - 1) + gain) / period;
+                const currentAvgLoss = (prevAvgLoss * (period - 1) + loss) / period;
+
+                prevAvgGain = currentAvgGain;
+                prevAvgLoss = currentAvgLoss;
+
+                const rs = currentAvgGain / currentAvgLoss;
+                rsi.push(100 - 100 / (1 + rs));
+            }
+
+            return rsi;
+        }
+
+        function generateAlerts(closePrices, rsi) {
+            const alerts = [];
+            const latestClose = closePrices[closePrices.length - 1];
+            const latestRSI = rsi[rsi.length - 1];
+
+            // Add RSI alerts
+            if (latestRSI < 30) {
+                alerts.push(`RSI below 30: Oversold condition. RSI: ${latestRSI.toFixed(2)}`);
+            }
+            if (latestRSI > 70) {
+                alerts.push(`RSI above 70: Overbought condition. RSI: ${latestRSI.toFixed(2)}`);
+            }
+
+            // Add Bollinger Bands alerts
+            const { upper, lower } = calculateBollingerBands(closePrices);
+            if (latestClose > upper) {
+                alerts.push(`Price above Bollinger Upper Band: ${latestClose.toFixed(2)}`);
+            }
+            if (latestClose < lower) {
+                alerts.push(`Price below Bollinger Lower Band: ${latestClose.toFixed(2)}`);
+            }
+
+            return alerts;
+        }
+
+        function calculateBollingerBands(prices, period = 20, stdDevMultiplier = 2) {
+            const sliced = prices.slice(-period);
+            const avg = arrayAvg(sliced);
+            const stdDev = Math.sqrt(sliced.map(p => Math.pow(p - avg, 2)).reduce((a, b) => a + b) / sliced.length);
+
+            return {
+                upper: avg + stdDevMultiplier * stdDev,
+                lower: avg - stdDevMultiplier * stdDev
+            };
+        }
+
+        function arrayAvg(arr) {
+            return arr.reduce((a, b) => a + b) / arr.length;
+        }
+
+        function displayAlerts(alerts) {
+            const alertsDiv = document.getElementById("alerts");
+            alertsDiv.innerHTML = "";
+
+            if (alerts.length > 0) {
+                alerts.forEach(alert => {
+                    const div = document.createElement("div");
+                    div.className = "alert";
+                    div.textContent = alert;
+                    alertsDiv.appendChild(div);
                 });
-                const data = await response.json();
-
-                if (data.options) {
-                    processOptionsData(data.options);
-                } else {
-                    console.log(`No options data found for ${symbol}`);
-                }
-            } catch (error) {
-                console.error(`Error fetching option chain for ${symbol}:`, error);
+            } else {
+                alertsDiv.textContent = "No alerts. Market conditions are stable.";
             }
-        };
-
-        const processOptionsData = (options) => {
-            const alertContainer = document.getElementById("alertContainer");
-
-            // Clear previous alerts
-            alertContainer.innerHTML = "";
-
-            options.forEach(option => {
-                if (isHighProbability(option)) {
-                    const alert = document.createElement("div");
-                    alert.className = "alert";
-                    alert.innerHTML = `
-                        <p>Ticker: ${option.symbol} | Expiration: ${option.expiration_date} | Strike: ${option.strike} | Premium: $${option.last}</p>
-                        <p>This trade is set up because SPY is showing strong bullish signals with increasing open interest and favorable delta.</p>
-                        <p>Price Targets: $${option.ask}, $${option.bid}</p>
-                        <p>Stop Loss: $${option.last - 1}</p>
-                    `;
-                    alertContainer.appendChild(alert);
-                }
-            });
-        };
-
-        const isHighProbability = (option) => {
-            return option.greeks?.delta > 0.5 && option.open_interest > 100; // Adjust criteria as needed
-        };
-
-        // Fetch data for SPY every minute
-        setInterval(() => {
-            fetchOptionsData("SPY");
-        }, 60000);
-
-        // Initial data fetch
-        fetchOptionsData("SPY");
+        }
     </script>
 </body>
 </html>
